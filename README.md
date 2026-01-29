@@ -53,11 +53,17 @@ npm install
 npm start
 ```
 
-### 8. Deploy (Railway)
+### 8. Deploy
 
-1. Conectar repo
-2. Adicionar variáveis de ambiente
-3. Deploy automático
+**Railway (Recomendado):**
+- Ver guia completo: [RAILWAY_SETUP.md](RAILWAY_SETUP.md)
+- Deploy em 5 minutos
+- ~$1-2/mês
+- Auto-deploy do GitHub
+
+**Runpod:**
+- Ver guia: [RUNPOD_SETUP.md](RUNPOD_SETUP.md)
+- Mais caro, não recomendado para bot Slack
 
 ## Uso
 
