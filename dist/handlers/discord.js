@@ -1,17 +1,20 @@
-import { Client, GatewayIntentBits } from 'discord.js';
-import { chat } from '../chat.js';
-import { sessionManager } from '../sessions.js';
-export async function startDiscordHandler() {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.startDiscordHandler = startDiscordHandler;
+const discord_js_1 = require("discord.js");
+const chat_1 = require("../chat");
+const sessions_1 = require("../sessions");
+async function startDiscordHandler() {
     if (!process.env.DISCORD_BOT_TOKEN) {
         console.log('[Discord] Token not found, skipping Discord handler');
         return null;
     }
-    const client = new Client({
+    const client = new discord_js_1.Client({
         intents: [
-            GatewayIntentBits.Guilds,
-            GatewayIntentBits.GuildMessages,
-            GatewayIntentBits.DirectMessages,
-            GatewayIntentBits.MessageContent,
+            discord_js_1.GatewayIntentBits.Guilds,
+            discord_js_1.GatewayIntentBits.GuildMessages,
+            discord_js_1.GatewayIntentBits.DirectMessages,
+            discord_js_1.GatewayIntentBits.MessageContent,
         ],
     });
     client.on('ready', () => {
@@ -42,14 +45,14 @@ export async function startDiscordHandler() {
             if ('sendTyping' in message.channel) {
                 await message.channel.sendTyping();
             }
-            const history = sessionManager.getHistory(userId);
-            const response = await chat({
+            const history = sessions_1.sessionManager.getHistory(userId);
+            const response = await (0, chat_1.chat)({
                 userId,
                 userMessage: text,
                 history,
             });
-            sessionManager.addMessage(userId, { role: 'user', content: text });
-            sessionManager.addMessage(userId, { role: 'assistant', content: response });
+            sessions_1.sessionManager.addMessage(userId, { role: 'user', content: text });
+            sessions_1.sessionManager.addMessage(userId, { role: 'assistant', content: response });
             // Split long messages (Discord limit: 2000 chars)
             if (response.length <= 2000) {
                 await message.reply(response);

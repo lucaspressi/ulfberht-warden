@@ -1,8 +1,8 @@
 import 'dotenv/config';
-import { startSlackHandler } from './handlers/slack.js';
-import { startDiscordHandler } from './handlers/discord.js';
-import { startTelegramHandler } from './handlers/telegram.js';
-import { workspace } from './workspace.js';
+import { startSlackHandler } from './handlers/slack';
+import { startDiscordHandler } from './handlers/discord';
+import { startTelegramHandler } from './handlers/telegram';
+import { workspace } from './workspace';
 
 // Validate Anthropic API key
 if (!process.env.ANTHROPIC_API_KEY) {

@@ -1,12 +1,15 @@
-import { App } from '@slack/bolt';
-import { chat } from '../chat.js';
-import { sessionManager } from '../sessions.js';
-export async function startSlackHandler() {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.startSlackHandler = startSlackHandler;
+const bolt_1 = require("@slack/bolt");
+const chat_1 = require("../chat");
+const sessions_1 = require("../sessions");
+async function startSlackHandler() {
     if (!process.env.SLACK_BOT_TOKEN || !process.env.SLACK_APP_TOKEN) {
         console.log('[Slack] Tokens not found, skipping Slack handler');
         return null;
     }
-    const app = new App({
+    const app = new bolt_1.App({
         token: process.env.SLACK_BOT_TOKEN,
         appToken: process.env.SLACK_APP_TOKEN,
         socketMode: true,
@@ -24,14 +27,14 @@ export async function startSlackHandler() {
             if (!text)
                 return;
             console.log(`[Slack] Message from ${userId}: ${text.substring(0, 50)}...`);
-            const history = sessionManager.getHistory(userId);
-            const response = await chat({
+            const history = sessions_1.sessionManager.getHistory(userId);
+            const response = await (0, chat_1.chat)({
                 userId,
                 userMessage: text,
                 history,
             });
-            sessionManager.addMessage(userId, { role: 'user', content: text });
-            sessionManager.addMessage(userId, { role: 'assistant', content: response });
+            sessions_1.sessionManager.addMessage(userId, { role: 'user', content: text });
+            sessions_1.sessionManager.addMessage(userId, { role: 'assistant', content: response });
             await say(response);
         }
         catch (error) {
@@ -49,14 +52,14 @@ export async function startSlackHandler() {
                 return;
             }
             console.log(`[Slack] Mention from ${userId}: ${text.substring(0, 50)}...`);
-            const history = sessionManager.getHistory(userId);
-            const response = await chat({
+            const history = sessions_1.sessionManager.getHistory(userId);
+            const response = await (0, chat_1.chat)({
                 userId,
                 userMessage: text,
                 history,
             });
-            sessionManager.addMessage(userId, { role: 'user', content: text });
-            sessionManager.addMessage(userId, { role: 'assistant', content: response });
+            sessions_1.sessionManager.addMessage(userId, { role: 'user', content: text });
+            sessions_1.sessionManager.addMessage(userId, { role: 'assistant', content: response });
             await say(response);
         }
         catch (error) {

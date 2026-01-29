@@ -1,12 +1,15 @@
-import { Telegraf } from 'telegraf';
-import { chat } from '../chat.js';
-import { sessionManager } from '../sessions.js';
-export async function startTelegramHandler() {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.startTelegramHandler = startTelegramHandler;
+const telegraf_1 = require("telegraf");
+const chat_1 = require("../chat");
+const sessions_1 = require("../sessions");
+async function startTelegramHandler() {
     if (!process.env.TELEGRAM_BOT_TOKEN) {
         console.log('[Telegram] Token not found, skipping Telegram handler');
         return null;
     }
-    const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN);
+    const bot = new telegraf_1.Telegraf(process.env.TELEGRAM_BOT_TOKEN);
     // Handle text messages
     bot.on('text', async (ctx) => {
         try {
@@ -18,14 +21,14 @@ export async function startTelegramHandler() {
             console.log(`[Telegram] Message from ${userId}: ${text.substring(0, 50)}...`);
             // Show typing indicator
             await ctx.sendChatAction('typing');
-            const history = sessionManager.getHistory(userId);
-            const response = await chat({
+            const history = sessions_1.sessionManager.getHistory(userId);
+            const response = await (0, chat_1.chat)({
                 userId,
                 userMessage: text,
                 history,
             });
-            sessionManager.addMessage(userId, { role: 'user', content: text });
-            sessionManager.addMessage(userId, { role: 'assistant', content: response });
+            sessions_1.sessionManager.addMessage(userId, { role: 'user', content: text });
+            sessions_1.sessionManager.addMessage(userId, { role: 'assistant', content: response });
             // Telegram limit: 4096 chars
             if (response.length <= 4096) {
                 await ctx.reply(response);
@@ -49,7 +52,7 @@ export async function startTelegramHandler() {
     // Handle /clear command to reset conversation
     bot.command('clear', async (ctx) => {
         const userId = `telegram_${ctx.from.id}`;
-        sessionManager.clear(userId);
+        sessions_1.sessionManager.clear(userId);
         await ctx.reply('Histórico limpo. Começando conversa nova.');
     });
     await bot.launch();

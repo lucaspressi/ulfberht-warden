@@ -1,6 +1,6 @@
 import { Telegraf } from 'telegraf';
-import { chat } from '../chat.js';
-import { sessionManager } from '../sessions.js';
+import { chat } from '../chat';
+import { sessionManager } from '../sessions';
 
 export async function startTelegramHandler() {
   if (!process.env.TELEGRAM_BOT_TOKEN) {

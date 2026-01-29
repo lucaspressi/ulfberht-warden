@@ -1,13 +1,19 @@
-import Anthropic from '@anthropic-ai/sdk';
-import { workspace } from './workspace.js';
-const client = new Anthropic({
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.chat = chat;
+const sdk_1 = __importDefault(require("@anthropic-ai/sdk"));
+const workspace_1 = require("./workspace");
+const client = new sdk_1.default({
     apiKey: process.env.ANTHROPIC_API_KEY,
 });
 const MODEL = 'claude-sonnet-4-20250514';
-export async function chat(options) {
+async function chat(options) {
     const { userId, userMessage, history } = options;
     try {
-        const systemPrompt = workspace.getSystemPrompt();
+        const systemPrompt = workspace_1.workspace.getSystemPrompt();
         const messages = [
             ...history,
             {

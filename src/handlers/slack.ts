@@ -1,6 +1,6 @@
 import { App } from '@slack/bolt';
-import { chat } from '../chat.js';
-import { sessionManager } from '../sessions.js';
+import { chat } from '../chat';
+import { sessionManager } from '../sessions';
 
 export async function startSlackHandler() {
   if (!process.env.SLACK_BOT_TOKEN || !process.env.SLACK_APP_TOKEN) {

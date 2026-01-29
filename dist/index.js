@@ -1,7 +1,9 @@
-import 'dotenv/config';
-import { startSlackHandler } from './handlers/slack.js';
-import { startDiscordHandler } from './handlers/discord.js';
-import { startTelegramHandler } from './handlers/telegram.js';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+require("dotenv/config");
+const slack_1 = require("./handlers/slack");
+const discord_1 = require("./handlers/discord");
+const telegram_1 = require("./handlers/telegram");
 // Validate Anthropic API key
 if (!process.env.ANTHROPIC_API_KEY) {
     console.error('❌ Missing required environment variable: ANTHROPIC_API_KEY');
@@ -17,11 +19,11 @@ const handlers = {};
 (async () => {
     try {
         // Start Slack
-        handlers.slack = await startSlackHandler();
+        handlers.slack = await (0, slack_1.startSlackHandler)();
         // Start Discord
-        handlers.discord = await startDiscordHandler();
+        handlers.discord = await (0, discord_1.startDiscordHandler)();
         // Start Telegram
-        handlers.telegram = await startTelegramHandler();
+        handlers.telegram = await (0, telegram_1.startTelegramHandler)();
         // Check if at least one handler is running
         const activeHandlers = Object.values(handlers).filter(Boolean).length;
         if (activeHandlers === 0) {

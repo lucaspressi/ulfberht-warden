@@ -1,4 +1,4 @@
-import { MessageParam } from '@anthropic-ai/sdk/resources/messages.js';
+import { MessageParam } from '@anthropic-ai/sdk/resources/messages';
 
 export interface Session {
   userId: string;

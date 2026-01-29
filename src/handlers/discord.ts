@@ -1,6 +1,6 @@
 import { Client, GatewayIntentBits, Message } from 'discord.js';
-import { chat } from '../chat.js';
-import { sessionManager } from '../sessions.js';
+import { chat } from '../chat';
+import { sessionManager } from '../sessions';
 
 export async function startDiscordHandler() {
   if (!process.env.DISCORD_BOT_TOKEN) {

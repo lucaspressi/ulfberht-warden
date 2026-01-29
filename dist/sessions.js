@@ -1,3 +1,6 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.sessionManager = void 0;
 class SessionManager {
     sessions = new Map();
     getOrCreate(userId) {
@@ -36,4 +39,4 @@ class SessionManager {
         return this.sessions.size;
     }
 }
-export const sessionManager = new SessionManager();
+exports.sessionManager = new SessionManager();

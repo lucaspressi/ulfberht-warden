@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "Ulfberht-Warden - AI assistant on Slack, Discord, and Telegram",
   "main": "dist/index.js",
-  "type": "module",
   "scripts": {
     "start": "node dist/index.js",
     "dev": "tsx watch src/index.ts",

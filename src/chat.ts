@@ -1,6 +1,6 @@
 import Anthropic from '@anthropic-ai/sdk';
-import { MessageParam } from '@anthropic-ai/sdk/resources/messages.js';
-import { workspace } from './workspace.js';
+import { MessageParam } from '@anthropic-ai/sdk/resources/messages';
+import { workspace } from './workspace';
 
 const client = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
