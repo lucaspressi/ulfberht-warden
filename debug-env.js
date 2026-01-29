@@ -1,3 +1,6 @@
+// Load .env first
+require('dotenv/config');
+
 // Quick debug script
 console.log('Environment variables check:');
 console.log('ANTHROPIC_API_KEY:', process.env.ANTHROPIC_API_KEY ? '✓ Set (length: ' + process.env.ANTHROPIC_API_KEY.length + ')' : '✗ Missing');
