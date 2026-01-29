@@ -48,7 +48,9 @@ export async function startDiscordHandler() {
       console.log(`[Discord] Message from ${userId}: ${text.substring(0, 50)}...`);
 
       // Show typing indicator
-      await message.channel.sendTyping();
+      if ('sendTyping' in message.channel) {
+        await message.channel.sendTyping();
+      }
 
       const history = sessionManager.getHistory(userId);
 
@@ -67,7 +69,9 @@ export async function startDiscordHandler() {
       } else {
         const chunks = response.match(/[\s\S]{1,2000}/g) || [];
         for (const chunk of chunks) {
-          await message.channel.send(chunk);
+          if ('send' in message.channel) {
+            await message.channel.send(chunk);
+          }
         }
       }
     } catch (error) {
