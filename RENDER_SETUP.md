@@ -118,11 +118,12 @@ Selecionar plano:
 
 ## Vantagens do Render
 
-✅ Interface mais simples que Railway
-✅ Variáveis de ambiente funcionam direto
-✅ Logs claros
-✅ Free tier funciona (com limitações)
+✅ Interface simples e intuitiva
+✅ Variáveis de ambiente funcionam perfeitamente
+✅ Logs em tempo real claros
+✅ Free tier disponível (com limitações)
 ✅ Deploy automático do GitHub
+✅ Suporte a Docker out-of-the-box
 
 ## Custos
 
