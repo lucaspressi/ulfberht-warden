@@ -2,9 +2,37 @@
 
 AI assistant forjado com precisão, rodando no Slack.
 
-## Setup
+## Platforms
 
-### 1. Criar Slack App
+Ulfberht-Warden roda em **Slack**, **Discord** e **Telegram**.
+
+Configure apenas as plataformas que você quer usar (1, 2 ou todas).
+
+👉 **[Guia completo de configuração multi-plataforma](PLATFORMS.md)**
+
+## Quick Setup
+
+### 1. Configurar Plataformas
+
+Siga o guia: **[PLATFORMS.md](PLATFORMS.md)**
+
+Resumo:
+- **Slack**: Socket Mode + Event Subscriptions
+- **Discord**: Bot com Message Content Intent
+- **Telegram**: Criar bot com @BotFather
+
+### 2. Configurar Railway (ou rodar local)
+
+Ver: **[RAILWAY_SETUP.md](RAILWAY_SETUP.md)**
+
+---
+
+## Slack Setup (Deprecated - Use PLATFORMS.md)
+
+<details>
+<summary>Expandir setup antigo do Slack</summary>
+
+### 1. Criar Slack App (OLD)
 
 1. https://api.slack.com/apps → Create New App
 2. From scratch → Nome: "Ulfberht-Warden"
@@ -65,10 +93,22 @@ npm start
 - Ver guia: [RUNPOD_SETUP.md](RUNPOD_SETUP.md)
 - Mais caro, não recomendado para bot Slack
 
+</details>
+
+---
+
 ## Uso
 
-- DM: manda mensagem direta pro bot
-- Menção: `@Ulfberht-Warden sua pergunta`
+**Slack:**
+- DM ou mencionar `@Ulfberht-Warden`
+
+**Discord:**
+- DM ou mencionar `@Ulfberht-Warden`
+
+**Telegram:**
+- Buscar bot e enviar `/start`
+- Conversar normalmente
+- `/clear` para limpar histórico
 
 ## Personalização
 

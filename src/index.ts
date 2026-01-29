@@ -1,130 +1,57 @@
 import 'dotenv/config';
-import { App } from '@slack/bolt';
-import { chat } from './chat.js';
-import { sessionManager } from './sessions.js';
+import { startSlackHandler } from './handlers/slack.js';
+import { startDiscordHandler } from './handlers/discord.js';
+import { startTelegramHandler } from './handlers/telegram.js';
 import { workspace } from './workspace.js';
 
-// Validate environment variables
-const requiredEnvVars = [
-  'ANTHROPIC_API_KEY',
-  'SLACK_BOT_TOKEN',
-  'SLACK_APP_TOKEN',
-];
-
-for (const envVar of requiredEnvVars) {
-  if (!process.env[envVar]) {
-    console.error(`❌ Missing required environment variable: ${envVar}`);
-    process.exit(1);
-  }
+// Validate Anthropic API key
+if (!process.env.ANTHROPIC_API_KEY) {
+  console.error('❌ Missing required environment variable: ANTHROPIC_API_KEY');
+  process.exit(1);
 }
 
-// Initialize Slack app with Socket Mode
-const app = new App({
-  token: process.env.SLACK_BOT_TOKEN,
-  appToken: process.env.SLACK_APP_TOKEN,
-  socketMode: true,
-});
+console.log('');
+console.log('='.repeat(60));
+console.log('⚔️  ULFBERHT-WARDEN');
+console.log('='.repeat(60));
 
-// Handle direct messages and mentions
-app.event('message', async ({ event, say }) => {
-  try {
-    // @ts-ignore - Slack types can be complex
-    if (event.subtype || event.bot_id) return;
+// Track active handlers
+const handlers: {
+  slack?: any;
+  discord?: any;
+  telegram?: any;
+} = {};
 
-    // @ts-ignore
-    const userId = event.user;
-    // @ts-ignore
-    const text = event.text;
-
-    if (!text) return;
-
-    console.log(`[Slack] Message from ${userId}: ${text.substring(0, 50)}...`);
-
-    // Get history
-    const history = sessionManager.getHistory(userId);
-
-    // Get response from Claude
-    const response = await chat({
-      userId,
-      userMessage: text,
-      history,
-    });
-
-    // Add messages to session
-    sessionManager.addMessage(userId, {
-      role: 'user',
-      content: text,
-    });
-
-    sessionManager.addMessage(userId, {
-      role: 'assistant',
-      content: response,
-    });
-
-    // Reply
-    await say(response);
-  } catch (error) {
-    console.error('[Slack] Error handling message:', error);
-    await say('Desculpa, tive um problema ao processar sua mensagem. Tenta de novo?');
-  }
-});
-
-// Handle app mentions
-app.event('app_mention', async ({ event, say }) => {
-  try {
-    const userId = event.user;
-    // Remove mention from text
-    const text = event.text.replace(/<@[^>]+>/g, '').trim();
-
-    if (!text) {
-      await say('Oi! Como posso ajudar?');
-      return;
-    }
-
-    console.log(`[Slack] Mention from ${userId}: ${text.substring(0, 50)}...`);
-
-    // Get history
-    const history = sessionManager.getHistory(userId);
-
-    // Get response from Claude
-    const response = await chat({
-      userId,
-      userMessage: text,
-      history,
-    });
-
-    // Add messages to session
-    sessionManager.addMessage(userId, {
-      role: 'user',
-      content: text,
-    });
-
-    sessionManager.addMessage(userId, {
-      role: 'assistant',
-      content: response,
-    });
-
-    // Reply
-    await say(response);
-  } catch (error) {
-    console.error('[Slack] Error handling mention:', error);
-    await say('Desculpa, tive um problema ao processar sua mensagem. Tenta de novo?');
-  }
-});
-
-// Start the app
+// Start all enabled handlers
 (async () => {
   try {
-    await app.start();
+    // Start Slack
+    handlers.slack = await startSlackHandler();
 
-    console.log('');
-    console.log('='.repeat(50));
-    console.log('⚔️  ULFBERHT-WARDEN');
-    console.log('='.repeat(50));
-    console.log('Status: ONLINE');
-    console.log(`Model: claude-sonnet-4-20250514`);
-    console.log(`Socket Mode: Enabled`);
-    console.log('='.repeat(50));
+    // Start Discord
+    handlers.discord = await startDiscordHandler();
+
+    // Start Telegram
+    handlers.telegram = await startTelegramHandler();
+
+    // Check if at least one handler is running
+    const activeHandlers = Object.values(handlers).filter(Boolean).length;
+
+    if (activeHandlers === 0) {
+      console.error('❌ No platform tokens configured!');
+      console.error('');
+      console.error('Configure at least one platform:');
+      console.error('  - SLACK_BOT_TOKEN + SLACK_APP_TOKEN');
+      console.error('  - DISCORD_BOT_TOKEN');
+      console.error('  - TELEGRAM_BOT_TOKEN');
+      console.error('');
+      process.exit(1);
+    }
+
+    console.log('='.repeat(60));
+    console.log(`Status: ONLINE (${activeHandlers} platform${activeHandlers > 1 ? 's' : ''})`);
+    console.log('Model: claude-sonnet-4-20250514');
+    console.log('='.repeat(60));
     console.log('');
   } catch (error) {
     console.error('❌ Failed to start:', error);
@@ -135,6 +62,18 @@ app.event('app_mention', async ({ event, say }) => {
 // Graceful shutdown
 process.on('SIGTERM', async () => {
   console.log('[Server] SIGTERM received, shutting down...');
-  await app.stop();
+
+  if (handlers.slack) {
+    await handlers.slack.stop();
+  }
+
+  if (handlers.discord) {
+    handlers.discord.destroy();
+  }
+
+  if (handlers.telegram) {
+    handlers.telegram.stop();
+  }
+
   process.exit(0);
 });
