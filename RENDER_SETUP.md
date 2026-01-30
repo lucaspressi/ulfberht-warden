@@ -39,16 +39,16 @@ Na seção **Environment Variables**, adicionar:
 
 ```
 ANTHROPIC_API_KEY
-Value: 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
+Value: sk-ant-api03-xxx (sua chave da Anthropic)
 
 SLACK_BOT_TOKEN
-Value: xoxb-2860497801-2632804586611-OlqjOJGVxZPJi2xeU3OhuN0q
+Value: xoxb-xxx (seu Bot Token do Slack)
 
 SLACK_APP_TOKEN
-Value: xapp-1-A02JDFP2D5L-10403615146898-b6118948545f68b55fb1e9e79b9add3fe5c29ac2b7c114d7c4ce1038c264fbe1
+Value: xapp-1-xxx (seu App-Level Token do Slack)
 
 SLACK_SIGNING_SECRET
-Value: 3d2fdfa15aefc6ea3bd11dcc108f33af
+Value: xxx (seu Signing Secret do Slack)
 ```
 
 *Deixar Discord e Telegram vazios por enquanto*
